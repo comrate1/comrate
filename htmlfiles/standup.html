@@ -1,0 +1,128 @@
+<style>
+  #standup_videos_container:hover > .prev{
+        display: block;
+    }
+
+    #standup_videos_container:hover > .next{
+        display: block;
+    }
+
+    .playbutton:hover{
+        color: black;
+        background-color: white;
+    }
+
+    .playbutton img{
+        margin-bottom:3px
+    }
+
+    select:focus{
+      box-shadow: 0 0 5px rgb(224, 240, 245);
+    }
+
+    @media screen and (max-width: 760px) {
+        .imagecard {
+            width: 12em;
+        }
+
+        .landscape-image {
+            width: 12em;
+        }
+
+        #specials-modal-body>.card {
+            padding-bottom: 6px;
+            border: 3px;
+            background-color: azure;
+        }
+
+        .playbutton{
+            width: 73px;
+            height: 23px;
+            font-size: small;
+        }
+        .playbutton img{
+            width: 15px;
+        }
+        .circle {
+          bottom: 5px;
+        }
+    }
+</style>
+
+<h3 class="sectiontitle" onclick="filtereddata('all_comics_nav_modal')" data-bs-toggle="modal" data-bs-target="#navmodal">Stand Up</h3>
+
+<span style="float: right; padding-right: 10px;">
+  <select class="selectfilter" id="standup_list_countryfilter" onchange="filtereddata('standup_list', 'standup_videos');">
+    <option value=1 selected>Country</option>
+    <option value=2>India</option>
+    <!-- <option value=3>USA</option> -->
+  </select>
+
+  <select class="selectfilter" id="standup_list_categoryfilter" onchange="filtereddata('standup_list', 'standup_videos');">
+    <option value=1 selected>Category (All)</option>
+    <option value=2>NSFW</option>
+    <option value=3>Relationship</option>
+    <option value=4>Politickle</option>
+    <option value=5>Crowd work</option>
+    <option value=6>Engineering</option>
+    <option value=7>Travel</option>
+    <option value=8>Sports</option>
+    <option value=9>Dank</option>
+    <option value=10>Animals</option>
+    <option value=11>Date-or-die</option>
+    <option value=12>Job-jibes</option>
+    <option value=13>Student life</option>
+  </select>
+</span>
+
+<center>
+  <div class="horizontal-row" id="standup_videos_container">
+  
+  </div>
+</center>
+
+<script>
+  istandup = 0;
+  function standup_list() {    
+    i=istandup;
+    if(istandup == 0) { istandup = 10;  
+      document.getElementById('standup_videos_container').innerHTML= ` 
+      <span class="prev" onclick="move('left', 'standup_videos_container')" style="margin-top: 5%; left: 1%;">&#10094;</span>
+    <span class="next" onclick="move('notleft', 'standup_videos_container')" style="margin-top: 5%; right:1%;">&#10095;</span>`
+      // document.getElementById('standup_videos_container').innerHTML = get_arrows('standup_videos_container');
+    }
+    else istandup += 20;
+    for (;i<istandup && i < rows.length ; i++) {
+      document.getElementById('standup_videos_container').innerHTML += `
+        <div class="imagecard">
+        <img class = "landscape-image" src="https://i3.wp.com/i.ytimg.com/vi/`+ standup_videos[rows[i]]['vidid'] +`/mqdefault.jpg?resize=320&w=320" 
+          alt="" onclick="changehash('#standup/`+rows[i]+`')" loading="lazy">
+        <br style="display: block; content:''; margin-top:4px;">
+        <button type="button" class="playbutton" style="margin-left:5px;"
+                 data-bs-toggle="modal" data-bs-target="#standup_modal" onclick="changehash('#standup/`+rows[i]+`')">
+            <img src="../assets/icons/play-20.png"> Play</button>
+            <div style="float:right; ">
+                <img src="../assets/icons/star3-20.png"> `+ standup_videos[rows[i]]['rating'] +`   
+                <span class="userrating" style="font-size: medium;" onclick="coloremojis('-1','standup')" data-bs-toggle="modal" data-bs-target="#myModal"> 
+                        <img class="ratecard" src="../assets/icons/star6-20.png" width="20px" height="20px">   
+                    </span>
+                
+            </div>
+        </div>`;        
+    }
+  }
+
+  function standup_nav_modal(rowno){
+    imgtoyt1(rowno);
+    document.getElementById("standup_modal_rating").innerHTML = `<img src="../assets/icons/star3-20.png">  `+ standup_videos[rowno]['rating'];
+  }
+
+  function imgtoyt1(rowno) {
+    
+    document.getElementById('standup_modal_body').innerHTML = `<iframe  type="text/html"
+    class="ratio ratio-16x9" allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
+    style=" width: 100%; padding:0;  border-radius:0.4em;  aspect-ratio: 16 / 9;"
+    src="https://www.youtube.com/embed/`+ standup_videos[rowno]['vidid'] + `?&autoplay=1" frameborder="0" allowfullscreen>
+    </iframe>`;
+}
+</script>

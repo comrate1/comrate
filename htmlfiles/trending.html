@@ -1,0 +1,119 @@
+<style>
+    #trending-list {
+        overflow-y: scroll;
+        text-align: left;
+        padding-left: 23px;
+    }
+
+    #trending-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    #trending .next {
+        display: block;
+    }
+
+    #trending .prev {
+        display: block;
+    }
+</style>
+
+<!-- <br style="display: block; height: 2px;"> -->
+<center>
+    <div class="row" id="trending" style="padding-left: 3%; width: 100%; margin-top: 10px;">
+        <div class="col col-lg-8 col-md-8 col-sm-12 gx-0" style="position: relative;">
+            <span class="prev" onclick="movetrending('left'), pauseInterval()" style="margin-top: 23%; left: 0;">&#10094;</span>
+            <span class="next" onclick="movetrending('right'), pauseInterval()" style="margin-top: 23%; right:0;">&#10095;</span>
+            <img id="trendingytplayerimg" src="" alt="" width="100%" style="border-radius: 15px;">
+            <img src="/assets/icons/play-96.png" id="playbutton" alt="" width="9%" style="position: relative; top:-55%; cursor: pointer;" onclick=""></img></img>
+            <iframe id="trendingytplayer" class="ratio ratio-16x9 yttr" type="text/html" width
+                allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay;"
+                style="padding-left: 0em; padding-right: 0em; border-radius: 20px; width: 100%; aspect-ratio: 16 / 9; display: none;"
+                src="" frameborder="0" allowfullscreen>
+            </iframe>
+    
+        </div>
+        <div class="col col-lg-4 col-md-4 d-none d-md-block " id="trending-list"></div>
+    
+    </div>
+</center>
+
+
+
+<script>
+
+    function pauseInterval(){
+        pause = true;
+        setTimeout(() => {
+            pause = false;
+        }, 2000);
+    }
+
+    function imgtoyt2(vidid) {
+        pause = true;
+        $('#trending').css({'margin-bottom': '5px'})
+        $('#trendingytplayerimg').toggle();
+        $('#playbutton').hide();
+        document.getElementById('trendingytplayer').src = 'https://www.youtube.com/embed/' + vidid +'?&autoplay=1';
+        $('#trendingytplayer').toggle();
+    }
+
+    function movetrending(direction) {
+        if (direction == 'left') {
+            displayed--;
+        }
+        else {
+            displayed++;
+        }
+        $("#trendingytplayer").attr("src","");  
+        // $('#trending').css({'margin-bottom': '-7%'})    
+        trending_list();
+    }
+
+
+
+    var displayed = 0;
+    function trending_list(todisplay = -1) {
+        $('#trendingytplayer').hide();
+        $('#trendingytplayerimg').show();
+        $('#playbutton').show();
+        pause = false;
+        
+        if (todisplay != -1) {
+            displayed = todisplay;
+        }
+        else {
+            if (displayed == -1) displayed = trendingdata.length - 1;
+            else if (displayed == trendingdata.length) displayed = 0;
+        }
+        document.getElementById('trendingytplayerimg').src = 'https://i3.wp.com/i.ytimg.com/vi/' + trendingdata[displayed]['videourl'] + `/maxresdefault.jpg`;
+        $("#playbutton").attr("onclick", `imgtoyt2("` + trendingdata[displayed]['videourl'] + `")`);
+        document.getElementById("trending-list").innerHTML = "";
+
+        var i = displayed + 1;
+        
+        if (displayed + 1 == trendingdata.length) { i = 0; }
+        for (; i != displayed;) {
+            document.getElementById("trending-list").innerHTML += `<div class="card mb-3" >
+            <div class="row g-0" style="background-color: rgb(11, 2, 20); color: white; border-top: 0; cursor:pointer" onclick="trending_list(`+ (parseInt(trendingdata[i]['videoid']) - 1) + `)">
+                <div class="col-lg-6 col-md-12" >
+                    <img src="https://i3.wp.com/i.ytimg.com/vi/`+ trendingdata[i]['videourl'] + `/mqdefault.jpg?resize=320&w=320"  alt="..." style="width: 100%;">
+                </div>
+                <div class="col-lg-6">
+                    <div class="card-body" style="line-height:0.4; padding-left:10px; padding-top:0px ">
+                        <h5 class="card-title" >`+ trendingdata[i]['videotitle'] + `</h5>
+                        <p class="card-text">`+ trendingdata[i]['videoauthor'] + `</p>
+                        <p class="card-text"> <i class="fa-solid fa-clock" style="color: #ffffff;"></i> `+ trendingdata[i]['videoduration'] + `</p>
+                        <p class="card-text"> <i class="fa-solid fa-calendar" style="color: #ffffff;"></i> `+ trendingdata[i]['videopostedon'] + `</p>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+            i++;
+            if (i == trendingdata.length) {
+                i = 0;
+            }
+        }
+    }
+
+</script>

@@ -1,0 +1,173 @@
+<style>
+    .imagecard {
+        display: inline-block;
+        background-color: rgb(11, 2, 20);
+        box-shadow: 2px 2px 4px rgb(11, 2, 15);
+        margin-right: 20px;
+        color: white;
+        align-items: start;
+        overflow: hidden;
+        text-overflow: ellipsis " [..]";
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .landscape-image:hover{
+        box-shadow: 0 0 5px rgb(224, 240, 245);
+    }
+
+    .imagecard img {
+        border-radius: 0.5em;
+    }
+
+    #specials-container:hover>.prev {
+        display: block;
+    }
+
+    #specials-container:hover>.next {
+        display: block;
+    }
+
+    .playbutton {
+        float: left;
+        width: 100px;
+        height: 30px;
+        padding: 0px;
+        font-size: medium;
+        background-color: transparent;
+        color: white;
+        border: 1px solid white;
+        border-radius: 3px;
+    }
+</style>
+<br>
+<h3 class="sectiontitle" onclick="changehash('#specials/')">
+    Specials</h3>
+<span style="float: right; padding-right: 10px;">
+    <select class="selectfilter" id="get_specials_list_countryfilter"
+        onchange="filtereddata('get_specials_list', 'specialsdata')">
+        <option value=1 selected>Country</option>
+        <option value=1>All</option>
+        <option value=2>India</option>
+        <option value=3>USA</option>
+        <option value=4>UK</option>
+    </select>
+
+    <select class="selectfilter" id="get_specials_list_ottfilter"
+        onchange="filtereddata('get_specials_list', 'specialsdata')">
+        <option value=1 selected>OTT</option>
+        <option value=1>All</option>
+        <option value=2>Prime</option>
+        <option value=3>Netflix</option>
+    </select>
+
+    <!-- <select class="selectfilter" id="all_comics_cards_ratingfilter" onchange="filtereddata('all_comics_cards')">
+          <option value="" disabled selected>Rating</option>
+          <option value=1>All</option>
+          <option value=9>>9</option>
+          <option value=8>>8</option>
+        </select> -->
+</span>
+
+<center>
+    <div class="horizontal-row" id="specials-container">
+
+
+
+    </div>
+
+</center>
+
+<script>
+    function textellipsis(text = '', reqlength = 43) {
+        if (text.length > reqlength)
+            text = text.substring(0, reqlength - 2) + '...';
+        return text;
+    }
+    // ---------------------------SPECIALS----------------------------------------
+    ispecial = 0;
+    function get_specials_list() {
+        i = ispecial;
+        if (ispecial == 0) {
+            ispecial = 10;
+            document.getElementById('specials-container').innerHTML = ` 
+                <span class="prev" onclick="move('left', 'specials-container')" style=" margin-top: 5%; left: 1%;">&#10094;</span>
+                <span class="next" onclick="move('notleft', 'specials-container')" style="margin-top: 5%; right:1%;">&#10095;</span>`
+        }
+        else ispecial += 20;
+        for (; i < ispecial && i < rows.length; i++) {
+            document.getElementById('specials-container').innerHTML += `<div class="imagecard" >
+            <img class="landscape-image" src="https://i3.wp.com/i.ytimg.com/vi/`+ specialsdata[rows[i]]['specialpic'] + `/mqdefault.jpg?resize=320&w=320" alt=""
+                 onclick="changehash('#specials/`+ rows[i] + `')" loading="lazy">
+        <div ><br style="display: block; content:''; margin-top:8px;">
+            <p class="card-text"  style="float:left;">`+ textellipsis(specialsdata[rows[i]]['specialname'] + " ~ " + specialsdata[rows[i]]['comicname']) + ` </p>
+        </div> <br> <br style="display: block; content:''; margin-top:4px;">        
+        <button class="playbutton" type="button" style="margin-left:5px;"
+            onclick="changehash('#specials/`+ rows[i] + `'), imgtoyt(` + rows[i] + `);">
+        <img src="../assets/icons/play-20.png" > Trailer</button>
+        <div style="float:right; ">
+            <img src="../assets/icons/star3-20.png"> ` + specialsdata[rows[i]]['specialrating'] +
+                `</img>
+            <span class="userrating" style="font-size: medium;" onclick="coloremojis(`+ rows[i] + `,'special')" data-bs-toggle="modal" data-bs-target="#myModal"> 
+                        <img class="ratecard" src="../assets/icons/star6-20.png" width="20px" height="20px">   
+                    </span>   
+        </div>      
+        </div>`}
+    }
+
+    var specialspageno = 0;
+    function specials_nav_modal() {
+        if(specialspageno < 0) {specialspageno = 0; return;}
+        if(specialspageno > Math.ceil(rows.length / 40)) {specialspageno = Math.ceil(rows.length / 40); return;}
+        document.getElementById("specials-modal-body").innerHTML = "";
+        for (var i = 40 * specialspageno; i < 40 * (specialspageno + 1) && i < rows.length; i++) {
+            document.getElementById("specials-modal-body").innerHTML += `
+                <div class="card" style="display: inline-block; background-color: black; color: white; border-radius:0.5em; margin:3px; padding-bottom:10px" >
+                    <img src="https://i3.wp.com/i.ytimg.com/vi/`+ specialsdata[rows[i]]['specialpic'] + `/mqdefault.jpg?resize=320&w=320" alt=""
+                            onclick="changehash('#specials/`+ rows[i] + `')"  style="border-radius:0.5em;" >
+                    <div ><br style="display: block; content:''; margin-top:3px;">
+                        <p class="card-text"  style="float:left; padding-left:3px;">`+ textellipsis(specialsdata[rows[i]]['specialname'] + " ~ " + specialsdata[rows[i]]['comicname']) + ` </p>
+                    </div> <br>        
+                    <button type="button" style ="float:left; height:30px; width:100px; padding:0px; margin-left: 3px;" class="btn btn-outline-light" 
+                        onclick="changehash('#specials/`+ rows[i] + `'), imgtoyt(` + rows[i] + `);">
+                    <img src="../assets/icons/play-20.png"> Trailer</button>
+                    <div style="float:right; ">
+                        <img src="../assets/icons/star2-20.png"> <span style="font-size: large; margin-top:0px;">` + specialsdata[rows[i]]['specialrating'] +
+                    `</span>&nbsp; &nbsp; &nbsp;   
+                    </div>      
+                </div>`;
+        }
+    }
+
+    function get_specials_modaldata(rowno) {
+        debugger
+        document.getElementById("specials-modal-title").innerHTML = specialsdata[rowno]['comicname'];
+        document.getElementById("specials-modal-data").innerHTML = `<div class="row comicytvideos" id="specialsthumbnail">
+    <img src="https://i3.wp.com/i.ytimg.com/vi/`+ specialsdata[rowno]['specialpic'] + `/mqdefault.jpg?resize=320&w=320" alt="">
+  </div> 
+  <h5 >`+ specialsdata[rowno]['specialname'] + `</h5> 
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-6" >
+        <i class="fa-solid fa-globe" style="color: #ffffff;"></i>   ` + specialsdata[rowno]['comiccountry'] + `<br>
+        <i class="fa-solid fa-calendar" style="color: #ffffff;"></i>   `+ specialsdata[rowno]['specialyear'] + `
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-6" >
+        <img src="../assets/icons/star3-20.png"> `+ specialsdata[rowno]['specialrating'] + `
+    </div>
+  </div>`;
+
+        document.getElementById("specials-modal-footer").innerHTML = `<button type="button" class="btn btn-danger" onclick="imgtoyt(` + rowno + `)" >Trailer</button>
+  <a href="`+ specialsdata[rowno]['specialwatch'] + `" target="_blank"><button type="button" class="btn btn-info">` + specialsdata[rowno]['OTT'] + `</button></a>
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="press_back()">Close</button>
+`
+    }
+
+    function imgtoyt(rowno) {
+
+        document.getElementById('specialsthumbnail').innerHTML = `<iframe  type="text/html"
+    class="ratio ratio-16x9" allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
+    style=" width: 100%; padding:0;  border-radius:0.4em;  aspect-ratio: 16 / 9;"
+    src="https://www.youtube.com/embed/`+ specialsdata[rowno]['specialpic'] + `?&autoplay=1" frameborder="0" allowfullscreen>
+  </iframe>`;
+    }
+</script>

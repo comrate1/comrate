@@ -1,0 +1,150 @@
+  <style>
+    .horizontal-row {
+      overflow-x: scroll;
+      width: 96%;
+      /* float: center; */
+      /* padding-left: 20px;
+      padding-right: 20px; */
+      /* max-height: 500px; */
+
+      white-space: nowrap;
+    }
+
+    .horizontal-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollable-row {
+      overflow-x: scroll;
+      width: 100%;
+      /* max-height: 500px; */
+
+      white-space: nowrap;
+    }
+
+    .sectiontitle{
+      cursor: pointer;
+      margin-left: 1em; 
+      color: aliceblue; 
+      display: inline-block;
+    }
+
+    .sectiontitle:hover{
+      background-color: rgb(255, 255, 255);
+      border-radius: 4px;
+      color: rgb(0, 0, 0);
+      padding: 2px;
+    }
+
+    .selectfilter {
+      border-radius: 0.3em;
+      color: white;
+      border: 1px solid white;
+      background-color: rgba(94, 94, 94, 0.466);
+    }
+
+    .selectfilter:hover{
+      background-color: #292929;
+    }
+
+    option {
+      background-color: rgb(92, 92, 92);
+    }
+
+    #all-comic-card-container:hover .next {
+      display: block;
+    }
+
+    #all-comic-card-container:hover .prev {
+      display: block;
+    }
+
+    .userrating:hover{
+      background-color: rgba(0, 0, 0, 0.37);
+      border-radius: 5px;
+    }
+  </style>
+
+  <!-- position: absolute; right: 15px; -->
+  <br>
+  <h3 class="sectiontitle" onclick="changehash('#comics/')">All Comics</h3>
+  <span style="float: right; padding-right: 10px;">
+    <select class="selectfilter" id="all_comics_cards_countryfilter" onchange="filtereddata('all_comics_cards')">
+      <option value=1 selected>Country</option>
+      <option value=1>All</option>
+      <option value=2>India</option>
+      <option value=3>USA</option>
+    </select>
+
+  
+
+    <select class="selectfilter" id="all_comics_cards_ratingfilter" onchange="filtereddata('all_comics_cards')">
+      <option value=1 selected>Rating</option>
+      <option value=8>>8</option>
+      <option value=7>>7</option>
+      <option value=6>>6</option>
+      <option value=5>>5</option>
+    </select>
+  </span>
+
+  <center>
+    <div class="horizontal-row" id="all-comic-card-container">
+
+
+    </div>
+
+  </center>
+
+  <script>
+    //---this gets data from database via server and stores it in global variable comicdata---------
+    var currentpos = 0;
+  // assets/comic/`+ comicdata[rows[iall]]['imagesource'] + `.png
+  function all_comics_cards(id = "all-comic-card-container") {
+      var iall = currentpos;
+      if (currentpos == 0) { document.getElementById("all-comic-card-container").innerHTML = get_arrows('all-comic-card-container'); currentpos = 10 }
+      else currentpos += 30;
+      for (; iall < currentpos && iall < rows.length; iall++)
+          document.getElementById(id).innerHTML += `
+          <div class="mycard" style="--bg-img: url('https://i.imgur.com/`+ comicdata[rows[iall]]['imgur'] +`.png'); position:relative;" loading="lazy">
+          <a onclick="changehash('#comic/`+ rows[iall] +`/`+ changespacetodash(comicdata[rows[iall]]['comicname'])+`');" style="position: absolute; top: 0; left: 0; width: 100%; height: 90%; z-index: 1;"></a>
+              <img class="family-filter-icon"  src="`+ eval('family' + comicdata[rows[iall]]['comiccolor']) + `" width="22px">                
+              <p> ` + textellipsis(comicdata[rows[iall]]['comicname'], 17) + ` </p>
+              <div style="background:rgba(0, 0, 0, .6);">
+                  <img src="assets/icons/star5-20.png" wdith="20px" height="20px"> 
+                  <span style="font-size: medium;">` + comicdata[rows[iall]]['comicrating'] + `</span> 
+                  &nbsp; &nbsp; &nbsp;  
+                  <span class="userrating" style="font-size: medium;" onclick="coloremojis('` + comicdata[rows[iall]]['comicid'] + `')" data-bs-toggle="modal" data-bs-target="#myModal"> 
+                      <img class="ratecard" src="assets/icons/star-filled-20.png" width="20px" height="20px">   
+                  </span>
+              </div> 
+          </div>`;
+  }
+
+  // it uses rows[i] to get filtered data from filtereddata()
+  var pageno = 1;
+  function all_comics_nav_modal(page = 1, np = 0) {
+      if (np != 0) pagenolist(np);
+      else {
+          // <p > `  + comicdata[rows[i]]['comicdescription'] + `</p> 
+          pageno = page;
+          document.getElementById("nav-modal-body").innerHTML = "";
+          for (i = (page - 1) * 30; i < page * 30 && i < rows.length; i++) {
+              document.getElementById("nav-modal-body").innerHTML +=
+                  `<div class="mycard" style="--bg-img: url('assets/comic/` + comicdata[rows[i]]['imagesource'] + `.png'); position:relative;">
+              <a onclick="changehash('#comic/` + rows[i] + `/`+ changespacetodash(comicdata[rows[i]]['comicname'])+`')" style="position: absolute; top: 0; left: 0; width: 100%; height: 90%; z-index: 1;"></a>
+                  <img class="family-filter-icon"  src="`+ eval('family' + comicdata[rows[i]]['comiccolor']) + `">                
+                  <p onclick="changehash('#comic/` + rows[i] + `/`+ changespacetodash(comicdata[rows[i]]['comicname'])+`')"> ` + textellipsis(comicdata[rows[i]]['comicname'], 17) + ` </p>
+                  <div style="background:rgba(0, 0, 0, .6);">
+                      <img src="assets/icons/star4-20.png"> 
+                      <span style="font-size: medium;">` + comicdata[rows[i]]['comicrating'] + `</span> 
+                      &nbsp; &nbsp; &nbsp;  
+                      <span class="userrating" style="font-size: medium;" onclick="coloremojis('` + comicdata[rows[i]]['comicid'] + `')" data-bs-toggle="modal" data-bs-target="#myModal"> 
+                          <img class="ratecard" src="assets/icons/star-filled-20.png" >   ` + comicdata[rows[i]]['userrating'] +
+                  `</span> ` + `
+                  </div> 
+              </div>`;
+          }
+      }
+  }
+
+  </script>

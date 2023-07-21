@@ -1,0 +1,683 @@
+<style>
+  ::placeholder {
+    color: rgb(180, 179, 179);
+  }
+
+  /* css for pagination ++++++++++++++++++++++++++++ */
+
+  .page-item {
+    background-color: grey;
+  }
+
+  .pagination>li>a {
+    background-color: rgb(37, 37, 37);
+    color: #ffffff;
+  }
+
+  .pagination>li>a:focus,
+  .pagination>li>a:hover,
+  .pagination>li>span:focus,
+  .pagination>li>span:hover {
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+  }
+
+  .pagination>.active>a {
+    color: rgb(114, 114, 114);
+    background-color: #5A4181 !Important;
+    border: solid 1px #5A4181 !Important;
+  }
+
+  .pagination>.active>a:hover {
+    background-color: #5A4181 !Important;
+    border: solid 1px #5A4181;
+  }
+
+  /* +++++++++++++++++++++++++++++++++++++++++++++++ */
+
+  /* CSS for searchBar ----------------------------- */
+
+  .form-control {
+    background-color: black;
+    border: 1px grey solid
+  }
+
+  .form-control::placeholder {
+    color: rgb(197, 196, 196);
+  }
+
+  /* ----------------------------------------------- */
+
+  /* .commentinput {
+    border: none;
+    border-bottom: 1px white solid;
+    color: white;
+    background-color: transparent;
+    width: 95%;
+  } */
+
+  .navmodal1 {
+    z-index: 9998;
+  }
+
+  .ratepopup {
+    z-index: 9999;
+  }
+
+  #comment-form {
+    display: flex;
+    padding: 0;
+    margin-top: 16px;
+  }
+
+  #comment {
+    flex: 1;
+    /* margin-right: 16px; */
+    margin: 8px;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    /* border-radius: 4px; */
+    font-size: 16px;
+    color: white;
+  }
+
+  #comment:focus {
+    outline: none;
+    border: 0;
+    border-bottom: 2px solid white;
+  }
+
+  #commentsubmitbutton {
+    background-color: rgb(104, 103, 103);
+    color: #fff;
+    border: none;
+    height: 35px;
+    border-radius: 25px;
+    padding: 4px 8px;
+    /* 
+  font-size: 16px; */
+    cursor: pointer;
+  }
+
+  #commentsubmitbutton:hover {
+    background-color: rgb(54, 54, 54);
+  }
+
+  .custom_fade{
+    opacity: 5;
+  }
+</style>
+
+<!-- ------------- ---------------- ---NAV modal for ALL COMICS page-------------------------- ---  -->
+<div class="modal navmodal1 modal-open fade" id="navmodal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content" style="background-color: rgb(37, 37, 37);">
+      <div class="modal-header">
+
+        <div class="col col-lg-2 col-md-2 col-sm-3 d-none d-sm-block">
+          <h5 class="modal-title" id="nav-modal-title" style="color:wheat">All Comics</h5>
+        </div>
+        <div class="col col-lg-6 col-md-7 col-sm-7">
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search Comics" aria-label="Search"
+              id="datasearch-nav" onkeyup="getsuggestions(event, 'search-list-nav','datasearch-nav')"
+              onclick="getsuggestions(event, 'search-list-nav','datasearch-nav')">
+            <div class="col col-lg-6 col-md-7 col-sm-8 col-12 vertical-list" id="search-list-nav"
+              style="position: absolute; z-index: 2; max-width: 100%; top: 50px; ">
+            </div>
+          </form>
+        </div>
+        <button type="button" class="btn-close btn-close-white" onclick="press_back()"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <center>
+            <select class="selectfilter" id="all_comics_nav_modal_countryfilter"
+              onchange="filtereddata('all_comics_nav_modal')">
+              <option value="" disabled selected>Country</option>
+              <option value=1>All</option>
+              <option value=2>India</option>
+              <option value=3>USA</option>
+            </select>
+
+            <select class="selectfilter" id="all_comics_nav_modal_genderfilter"
+              onchange="filtereddata('all_comics_nav_modal')">
+              <option value="" disabled selected>Gender</option>
+              <option value=1>All</option>
+              <option value=2>Male</option>
+              <option value=3>Female</option>
+            </select>
+
+            <select class="selectfilter" id="all_comics_nav_modal_ratingfilter"
+              onchange="filtereddata('all_comics_nav_modal')">
+              <option value="" disabled selected>Rating</option>
+              <option value=9>>9</option>
+              <option value=8>>8</option>
+            </select>
+          </center>
+        </div>
+        <center>
+          <div id="nav-modal-body">
+
+          </div>
+        </center>
+
+      </div>
+      <div class="modal-footer justify-content-between" style="height: 60px; ">
+
+        <nav aria-label="Page navigation example" style="margin-top: -1px;">
+          <ul class="pagination" id="pagenation-list">
+            <li class="page-item" style="background-color: grey;">
+              <a class="page-link" href="#" tabindex="-1" onclick="all_comics_nav_modal(5,-1)">&#10094;</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="all_comics_nav_modal(1)">1</a> </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="all_comics_nav_modal(2)">2</a> </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="all_comics_nav_modal(3)">3</a> </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="all_comics_nav_modal(4)">4</a> </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="all_comics_nav_modal(5)">5</a> </li>
+            <li class="page-item">
+              <a class="page-link" href="#" onclick="all_comics_nav_modal(5, 1)">&#10095;</a>
+            </li>
+          </ul>
+        </nav>
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          style="position:absolute; right: 1px;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ---------------modal for each comic complete data ------------------ - -->
+<div class="modal fade" id="comicmodal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="comicmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); border-radius: 10px;">
+      <div class="modal-body">
+        <!-- <button type="button" data-bs-dismiss="modal" aria-label="Close"
+          style="position: fixed; top: 0.5%; right: 6%; z-index: 15; background-color: transparent; border: 0;"><img
+            src="assets/icons/close1.png" alt="" width="25px"></button> -->
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col col-md-6 col-lg-4 col-sm-12">
+              <div class="row" id="comicmodaltitle"
+                style="font-size: large; color:antiquewhite; margin-left: 1px; margin-right: 1px; padding-left: 3px; background-color: black; border-radius: 5px;">
+              </div>
+              <div class="row" style="position: relative;"><img id="comicimage" src=""
+                  style="width: 100%; height: auto;">
+                <span style="position: absolute; text-align: right; top: -30px;">
+                  <img id="family-filter1" src="assets/icons/red-family-32.png" alt="" data-toggle="tooltip"
+                    data-placement="bottom" width="auto" height="5%">
+                </span>
+                <span style="position: absolute; bottom: -20px;">
+                  <span> <a id="youtubemodal" target="_blank" href="https://www.youtube.com"><img
+                        src="assets/icons/yout-48.png" alt=""></a> </span>
+                  <span><a id="instagrammodal" target="_blank" href=""><img src="assets/icons/instag-48.png"
+                        alt=""></a></span>
+                  <span><a id="facebookmodal" target="_blank" href=""><img src="assets/icons/fbook-48.png"
+                        alt=""></a></span>
+                </span>
+              </div>
+              <br>
+              <div class="row" id="comicgenre"></div> <br>
+            </div>
+            <div class="col-md-6 col-lg-4 col-sm-12">
+              <div class="row container-fluid"
+                style="display:inline-block; background-color: (87, 87, 87); padding:10px; padding-bottom: 0px; margin-bottom: 4px; color: aliceblue; font-size: large; border:2px solid whitesmoke; border-radius: 10px; ">
+                <div id="comicdata">
+
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div id="comicdescription" style="color: white; text-align: left; margin-right: 2px;">
+                </div>
+                <br>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12">
+              <div class="row">
+                <h3 style="color:#c5c4c4">Latest Videos</h3>
+              </div>
+              <div id="modalytvideos" class="comicytvideos">
+                <div class="row">
+
+                </div>
+              </div>
+              <br>
+              <div class="row">
+              </div>
+            </div>
+          </div>
+          <!--  -->
+          <div class="row">
+            <form id="comment-form" onsubmit="return false">
+              <img src="assets/icons/avatar02.png" alt="" height="35px">
+              <input id="comment" placeholder="Add a comment"></textarea>
+              <button type="submit" id="commentsubmitbutton">Comment</button>
+            </form>
+            <!-- <form onsubmit="return false">
+              <div class="row">
+                <div class="col col-lg-1 col-md-2 col-sm-2 col-2"><img src="assets/icons/avatar01.png" alt=""
+                    style="border-radius: 50%;"></div>
+
+                <div class="col col-lg-10 col-md-7 col-sm-9 col-6"><input class="commentinput" id="comment" type="text"
+                    placeholder="Add a comment..." required autocomplete="off" value=""></div>
+
+                <div class="col col-lg-1 col-md-2 col-sm-1 col-3 p-2"><button type="submit" class="btn btn-secondary"
+                    id="commentsubmitbutton" onclick=""> Comment</button></div>
+              </div>
+              <!-- <img src="assets/icons/avatar01.png" alt="" style="width: 48px;">
+              <input class="commentinput" id="comment" type="text" placeholder="Add a comment..." required autocomplete="off" style="width: 70%;">
+              <button type="submit" class="btn btn-secondary" id="commentsubmitbutton" onclick="" style="width: 15%; font-size: 1rem;"> Comment</button> -->
+            </form> -->
+
+            <div id="commentsection" style="color: white;">
+
+            </div>
+          </div>
+        </div>
+        <br>
+        <h4 style="color: white;">Similar</h4>
+        <center>
+          <div id="recommendation" class="horizontal-row">
+
+          </div>
+        </center>
+      </div>
+      <div class="modal-footer justify-content-between" style="height: 40px; ">
+
+        <div class="col col-lg-6 col-md-10 col-sm-12 col-12" id="ratingsystem" style="margin-top: -5px; color: white;">
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="press_back()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <!-- <div class="d-none d-md-block">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            style="position:absolute; right: 10px; bottom: 0px; height: 40px; border-top: 1px solid white; ">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- -- -- -- -- -- -- The Modal for rate card -- -- -- -- -- -- -->
+<div class="modal ratepopup" id="myModal" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content " style="background-color: rgb(82, 80, 80);">
+
+
+
+      <!-- Modal body -->
+      <center>
+        <div class="modal-body">
+          <!-- <span style="color: yellow; font-size:xx-large; font-weight: bolder;">Rate This: </span> -->
+          <span class="ratetitle" style="color: yellow; font-size: larger; font-weight: bolder;"></span><br>
+          <div id="emojis">
+          </div>
+          <br>
+          <!-- <div class="h-captcha" data-sitekey="a32f8cd4-dafd-4996-b4f7-c245eacf19f9"></div> -->
+          <button type="button" class="btn btn-warning" id="ratebutton" onclick="submitrating()">Rate</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </center>
+    </div>
+  </div>
+</div>
+
+<!-- popular comics nav modal -->
+<div class="modal fade" id="popularcomics_navmodal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+    <div class="modal-content" style="background-color: rgb(26, 26, 26); color: white;">
+      <div class="modal-body">
+        <button type="button" class="close" onclick="press_back()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <center>
+          <h3>Popular Comics</h3>
+          <div id="popularcomics_navmodalbody">
+
+          </div>
+        </center>
+      </div>
+
+      <!-- <div class="modal-footer" style="height: 50px; padding: 0;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal for specials particular special-->
+<div class="modal fade" id="specialsmodal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); color: whitesmoke;">
+      <div class="modal-header">
+        <h4 class="modal-title" id="specials-modal-title"></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="specials-modal-data">
+
+      </div>
+      <div class="modal-footer" id="specials-modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- -- --- --- ---- ---- ----- ----- Specials Modal page -- -- --- --- ---- ---- ----- ----->
+<div class="modal fade" id="specials_navmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+    <div class="modal-content" style="background-color: rgb(0, 0, 0); color: white;">
+      <div class="modal-body">
+        <center>          
+            <h3>Specials</h3>
+  
+            <select class="selectfilter" id="specials_nav_modal_countryfilter"
+              onchange="filtereddata('specials_nav_modal', 'specialsdata')">
+              <option value=1 selected>Country</option>
+              <option value=1>All</option>
+              <option value=2>India</option>
+              <option value=3>USA</option>
+              <option value=4>UK</option>
+            </select>
+  
+            <select class="selectfilter" id="specials_nav_modal_ottfilter"
+              onchange="filtereddata('specials_nav_modal', 'specialsdata')">
+              <option value=1 selected>OTT</option>
+              <option value=1>All</option>
+              <option value=2>Prime</option>
+              <option value=3>Netflix</option>
+            </select>
+  
+            <button class="selectfilter" onclick="specialspageno--; specials_nav_modal();" style="height: 1.6em;">&#10094;</button>
+            <button class="selectfilter" onclick="specialspageno++; specials_nav_modal();" style="height: 1.6em;">&#10095;</button>
+
+          <div id="specials-modal-body" style="padding-top: 5px;">
+            <div class="card">
+
+            </div>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- --------------- ---------Contact Us Form ---------------- ----------------- -->
+<div class="modal fade" id="contactusmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); color: white;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Contact Us</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="contactusform">
+          <div><input type="text" name="name" placeholder="Your Name" value="" required></div>
+          <div><input type="text" name="email" id="" placeholder="Email" value=""></div>
+          <div>
+            <input list="Reason" name="reason" id="" placeholder="Reason" value="">
+            <datalist id="Reason">
+              <option value="Suggest New Feature">
+              <option value="Change in existing feature(s)">
+              <option value="Submit a Comic or show">
+              <option value="Report Incorrect information">
+            </datalist>
+            <div><textarea name="message" id="" rows="3" placeholder="Message" value="" required></textarea></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitcontactusform()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal for standup videos -->
+<div class="modal fade" id="standup_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); color: white;">
+      <!-- <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div> -->
+      <div class="modal-body comicytvideos" id="standup_modal_body">
+        ...
+      </div>
+      <div class="modal-footer justify-content-between">
+        <div id="standup_modal_rating">
+
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="press_back()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- modal for search page when pressed enter-->
+<div class="modal fade custom_fade" id="searchpage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-fullscreen-md-down">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); color: white;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchpagetitle">Search Results</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="press_back()"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Comics</h5>
+        <center>
+          <div id="searchpagecomics">
+
+          </div>
+        </center>
+        <br>
+        <h5>Movies</h5>
+        <center>
+          <div id="searchpagemovies">
+
+          </div>
+        </center>
+        <br>
+        <h5>Specials</h5>
+        <center>
+          <div id="searchpagespecials">
+
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- for privacy policy -->
+<div class="modal fade" id="privacypolicymodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); color: white;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">PRIVACY POLICY</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+
+          brownpant.com Privacy Policy
+          This privacy policy has been compiled to better serve those who are concerned with how their ‘Personally
+          Identifiable Information’ (PII) is being used online. PII, as described in US privacy law and information
+          security, is information that can be used on its own or with other information to identify, contact, or locate
+          a single person, or to identify an individual in context. Please read our privacy policy carefully to get a
+          clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable
+          Information in accordance with our website.
+
+          What personal information do we collect from the people that visit our blog, website or app?
+          When ordering or registering on our site, as appropriate, you may be asked to enter your name, email address
+          or other details to help you with your experience.
+          When do we collect information?
+          We collect information from you when you register on our site, subscribe to a newsletter, respond to a survey,
+          fill out a form or enter information on our site.
+
+          How do we use your information?
+          We may use the information we collect from you when you register, make a purchase, sign up for our newsletter,
+          respond to a survey or marketing communication, surf the website, or use certain other site features in the
+          following ways:
+          • To personalize your experience and to allow us to deliver the type of content and product offerings in which
+          you are most interested.
+          • To improve our website in order to better serve you.
+          • To administer a contest, promotion, survey or other site feature.
+
+          How do we protect your information?
+          We do not use vulnerability scanning and/or scanning to PCI standards.
+          We only provide articles and information. We never ask for credit card numbers.
+          We do not use Malware Scanning.
+          Your personal information is contained behind secured networks and is only accessible by a limited number of
+          persons who have special access rights to such systems, and are required to keep the information confidential.
+          In addition, all sensitive/credit information you supply is encrypted via Secure Socket Layer (SSL)
+          technology.
+          We implement a variety of security measures when a user enters, submits, or accesses their information to
+          maintain the safety of your personal information.
+          All transactions are processed through a gateway provider and are not stored or processed on our servers.
+
+          Do we use ‘cookies’?
+          Yes. Cookies are small files that a site or its service provider transfers to your computer’s hard drive
+          through your Web browser (if you allow) that enables the site’s or service provider’s systems to recognize
+          your browser and capture and remember certain information. For instance, we use cookies to help us remember
+          and process the items in your shopping cart. They are also used to help us understand your preferences based
+          on previous or current site activity, which enables us to provide you with improved services. We also use
+          cookies to help us compile aggregate data about site traffic and site interaction so that we can offer better
+          site experiences and tools in the future.
+          We use cookies to:
+          • Understand and save user’s preferences for future visits.
+          • Keep track of advertisements.
+          • Compile aggregate data about site traffic and site interactions in order to offer better site experiences
+          and tools in the future. We may also use trusted third-party services that track this information on our
+          behalf.
+          You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off
+          all cookies. You do this through your browser settings. Since browser is a little different, look at your
+          browser’s Help Menu to learn the correct way to modify your cookies.
+          If you turn cookies off, Some of the features that make your site experience more efficient may not function
+          properly.It won’t affect the user’s experience that make your site experience more efficient and may not
+          function properly.
+
+          Third-party disclosure
+          We do not sell, trade, or otherwise transfer to outside parties your Personally Identifiable Information
+          unless we provide users with advance notice. This does not include website hosting partners and other parties
+          who assist us in operating our website, conducting our business, or serving our users, so long as those
+          parties agree to keep this information confidential. We may also release information when it’s release is
+          appropriate to comply with the law, enforce our site policies, or protect ours or others’ rights, property or
+          safety.
+          However, non-personally identifiable visitor information may be provided to other parties for marketing,
+          advertising, or other uses.
+
+
+          Third-party links
+          Occasionally, at our discretion, we may include or offer third-party products or services on our website.
+          These third-party sites have separate and independent privacy policies. We therefore have no responsibility or
+          liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity
+          of our site and welcome any feedback about these sites.
+
+          Google
+          Google’s advertising requirements can be summed up by Google’s Advertising Principles. They are put in place
+          to provide a positive experience for users. https://support.google.com/adwordspolicy/answer/1316548?hl=en
+          We use Google AdSense Advertising on our website.
+          Google, as a third-party vendor, uses cookies to serve ads on our site. Google’s use of the DART cookie
+          enables it to serve ads to our users based on previous visits to our site and other sites on the Internet.
+          Users may opt-out of the use of the DART cookie by visiting the Google Ad and Content Network privacy policy.
+          We have implemented the following:
+          We, along with third-party vendors such as Google use first-party cookies (such as the Google Analytics
+          cookies) and third-party cookies (such as the DoubleClick cookie) or other third-party identifiers together to
+          compile data regarding user interactions with ad impressions and other ad service functions as they relate to
+          our website.
+          Opting out:
+          Users can set preferences for how Google advertises to you using the Google Ad Settings page. Alternatively,
+          you can opt out by visiting the Network Advertising Initiative Opt Out page or by using the Google Analytics
+          Opt Out Browser add on.
+
+          California Online Privacy Protection Act
+          CalOPPA is the first state law in the nation to require commercial websites and online services to post a
+          privacy policy. The law’s reach stretches well beyond California to require any person or company in the
+          United States (and conceivably the world) that operates websites collecting Personally Identifiable
+          Information from California consumers to post a conspicuous privacy policy on its website stating exactly the
+          information being collected and those individuals or companies with whom it is being shared. – See more at:
+          http://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf
+          According to CalOPPA, we agree to the following:
+          Users can visit our site anonymously.
+          Once this privacy policy is created, we will add a link to it on our home page or as a minimum, on the first
+          significant page after entering our website.
+          Our Privacy Policy link includes the word ‘Privacy’ and can easily be found on the page specified above.
+          You will be notified of any Privacy Policy changes:
+          • On our Privacy Policy Page
+          Can change your personal information:
+          • By logging in to your account
+          How does our site handle Do Not Track signals?
+          We honor Do Not Track signals and Do Not Track, plant cookies, or use advertising when a Do Not Track (DNT)
+          browser mechanism is in place.
+          Does our site allow third-party behavioral tracking?
+          It’s also important to note that we allow third-party behavioral tracking
+
+          COPPA (Children Online Privacy Protection Act)
+          When it comes to the collection of personal information from children under the age of 13 years old, the
+          Children’s Online Privacy Protection Act (COPPA) puts parents in control. The Federal Trade Commission, United
+          States’ consumer protection agency, enforces the COPPA Rule, which spells out what operators of websites and
+          online services must do to protect children’s privacy and safety online.
+          We do not specifically market to children under the age of 13 years old.
+          Do we let third-parties, including ad networks or plug-ins collect PII from children under 13?
+
+          Fair Information Practices
+          The Fair Information Practices Principles form the backbone of privacy law in the United States and the
+          concepts they include have played a significant role in the development of data protection laws around the
+          globe. Understanding the Fair Information Practice Principles and how they should be implemented is critical
+          to comply with the various privacy laws that protect personal information.
+          In order to be in line with Fair Information Practices we will take the following responsive action, should a
+          data breach occur:
+          We will notify you via email
+          • Within 7 business days
+          We also agree to the Individual Redress Principle which requires that individuals have the right to legally
+          pursue enforceable rights against data collectors and processors who fail to adhere to the law. This principle
+          requires not only that individuals have enforceable rights against data users, but also that individuals have
+          recourse to courts or government agencies to investigate and/or prosecute non-compliance by data processors.
+
+          CAN SPAM Act
+          The CAN-SPAM Act is a law that sets the rules for commercial email, establishes requirements for commercial
+          messages, gives recipients the right to have emails stopped from being sent to them, and spells out tough
+          penalties for violations.
+          We collect your email address in order to:
+          • Market to our mailing list or continue to send emails to our clients after the original transaction has
+          occurred.
+          To be in accordance with CANSPAM, we agree to the following:
+          • Not use false or misleading subjects or email addresses.
+          • Identify the message as an advertisement in some reasonable way.
+          • Include the physical address of our business or site headquarters.
+          • Monitor third-party email marketing services for compliance, if one is used.
+          • Honor opt-out/unsubscribe requests quickly.
+          • Allow users to unsubscribe by using the link at the bottom of each email.
+
+          If at any time you would like to unsubscribe from receiving future emails, you can email us at
+          • Follow the instructions at the bottom of each email.
+          and we will promptly remove you from ALL correspondence.
+
+
+          Contacting Us
+
+
+          If there are any questions regarding this privacy policy, you may contact us using the information below.
+          Aetherwise Solutions
+          Pune, Maharashtra 411016
+
+          India
+          support@webisoda.in
+          Last Edited on 2018-04-24
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

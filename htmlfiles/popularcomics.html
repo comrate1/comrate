@@ -1,0 +1,175 @@
+<style>
+    
+
+    /* ---------------my card css----------------------- */
+    .mycard {
+        font-family: 'comic Sans MS', sans-serif;
+        text-decoration: none;
+        --bg-filter-opacity: 0;
+        background-image: linear-gradient(rgba(0, 0, 0, var(--bg-filter-opacity)), rgba(0, 0, 0, var(--bg-filter-opacity))), var(--bg-img);
+        filter: brightness(110%);
+        height: 11em;
+        width: 7em;
+        font-size: 1.5em;
+        color: white;
+        border-radius: 0.5em;
+        padding: 0em;
+        margin: 0.3em;
+        display: inline-block;
+        /* align-items:normal; */
+        /* justify-items: normal; */
+        /* background-size: auto 12em; */
+        /* background-size: 270px 340px; */
+        background-size: 125%;
+        background-position: top;
+        background-repeat: no-repeat;
+        background-color: rgb(22, 22, 22);
+        /* box-shadow: 0 0 5em -1em black; */
+        /* transition: all, var(--transition-time); */
+        opacity: 1;
+        position: relative;
+        overflow: hidden;
+        /* outline: 1px solid rgba(245, 245, 245, 0.644); */
+        outline-offset: -6px;
+        /* border: 3px double #ffffff; */
+        /* border-image: linear-gradient(#fc0000, #ffee02) 30; */
+        /* transition: 1s; */
+    }
+    
+    .mycard img{
+        max-width: 525px;
+    }
+
+    @media screen and (max-width: 760px){
+        .mycard{
+            width: 8em;
+            font-size: 1em;
+            background-size: auto 12em;
+        }   
+        #trending{
+            padding-left: 0em;
+            padding-right: 0em;
+        }
+        .playbutton{
+            height: 25px;
+            width: 75px;
+        }
+        #trending{
+            padding-left: 2%;
+            padding-right: 2%
+        }
+    }
+    .mycard p {
+        margin: 0em;
+        margin-top: 10.7em;
+        font-size: 0.8em;
+        font-weight: 500;
+        line-height: 1.2em;
+        background: rgba(0, 0, 0, .6);
+    }
+
+    .mycard:hover {
+        box-shadow: 0 0 5px rgb(224, 240, 245);
+        /* background-size: 140%;; */
+        /* color: rgb(230, 230, 33); */
+        /* background-color: rgb(27, 27, 27); */
+        /* outline: 1px solid yellow; */
+    }
+
+    .mycard a{
+        cursor: pointer;
+    }
+
+    .ratecard{
+        cursor: pointer;
+    }
+
+    /* .mycard p {
+        font-size: 0.65em;
+        font-family: 'Open Sans';
+        color: white;
+        margin-top: 0.4em;
+        line-height: 1.3em;
+    } */
+
+    .mycard .tags {
+        display: flex;
+        color: rgb(245, 232, 232);
+    }
+
+    .mycard .tags .tag {
+        font-size: 0.75em;
+        background: rgba(3, 3, 3, 0.5);
+        border-radius: 0.3rem;
+        padding: 0 0.5em;
+        margin-right: 0.5em;
+        line-height: 1.5em;
+        transition: all, var(--transition-time);
+    }
+
+    .chip {
+        /* display: inline-block; */
+        max-width: fit-content;
+        margin: 3px;
+        /* padding: 10px; */
+        /* height: 50px; */
+        font-size: 1.1em;
+        font-weight: 300;
+        color: whitesmoke;
+        /* line-height: 50px; */
+        border-radius: 25px;
+        border: 2px dotted white;
+        /* background-color: #f1dd24; */
+    }
+    .chip:hover{
+        border: 2px solid white;
+        font-size: 1.2em;
+    }
+
+    .family-filter-icon{
+        position: absolute;
+        size: 1em;
+        left: 7px;
+        top: 7px;        
+    }
+
+    #comic-card-container:hover .next{
+        display: block;
+    }
+
+    #comic-card-container:hover .prev{
+        display: block;
+    }
+</style>
+<br>
+<h3 class="sectiontitle" onclick="changehash('#Popular_comics')">Popular Comics</h3>
+
+<center>
+    <div class="horizontal-row" id="comic-card-container">
+
+
+    </div>
+</center>
+
+<script>
+    function popular_comics_cards(id = 'comic-card-container') {
+        document.getElementById(id).innerHTML = "";
+        if (id == 'comic-card-container') document.getElementById(id).innerHTML = get_arrows(id);
+        for (i = 0; i < populardata.length; i++) {
+            document.getElementById(id).innerHTML += `
+        <div class="mycard" style="--bg-img: url('assets/comic/`+ comicdata[populardata[i]['rowno']]['imagesource'] + `.png'); position:relative;">
+        <a onclick="changehash('#comic/` + populardata[i]['rowno'] + `/ `+changespacetodash(comicdata[populardata[i]['rowno']]['comicname'])+`')"  
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 90%; z-index: 1;"></a>
+            <img class="family-filter-icon"  src="`+ eval('family' + comicdata[populardata[i]['rowno']]['comiccolor']) + `">                
+            <p> ` + textellipsis(comicdata[populardata[i]['rowno']]['comicname'], 17) + ` </p>
+            <div style="background:rgba(0, 0, 0, .6);">
+                <img src="assets/icons/star4-20.png"> 
+                <span style="font-size: medium;">` + comicdata[populardata[i]['rowno']]['comicrating'] + `</span> 
+                &nbsp; &nbsp; &nbsp; 
+                <span class="userrating" style="font-size: medium;" onclick="coloremojis('` + comicdata[populardata[i]['rowno']]['comicid'] + `')" data-bs-toggle="modal" data-bs-target="#myModal"> 
+                    <img class="ratecard" src="assets/icons/star-dotted-20.png" width="20px" height="20px">  </span> ` + `
+            </div> 
+        </div>`;
+        }
+    }
+</script>

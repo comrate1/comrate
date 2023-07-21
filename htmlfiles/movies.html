@@ -1,0 +1,293 @@
+<style>
+  #movies_container:hover>.prev {
+    display: block;
+  }
+
+  #movies_container:hover>.next {
+    display: block;
+  }
+
+  .circle {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.774);
+  border: 3px solid rgb(251, 255, 3);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  position: absolute;
+  top:0;
+  /* left: -7px; */
+  right: 10px;
+}
+#movie_rating {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: white;
+  font-size: 40px;
+  line-height: 30px;
+  padding: 0;
+}
+</style>
+
+<br>
+<h3 class="sectiontitle" onclick="changehash('#movies/')">Movies</h3>
+<span style="float: right; padding-right: 10px;">
+  <select class="selectfilter" id="movies_cards_languagefilter" onchange="filter_data_movies('movies_cards')">
+    <option value=1 selected>Language</option>
+    <option value="hi">Hindi</option>
+    <option value="en">English</option>
+    <option value="fr">French</option>
+    <option value="ko">Korean</option>
+    <option value="fi">Finnish</option>
+    <option value="de">German</option>
+  </select>
+
+  <select class="selectfilter" id="movies_cards_yearfilter" onchange="filter_data_movies('movies_cards')">
+    <option value=1 selected>Year - All</option>
+    <option value=1960>1960-70</option>
+    <option value=1970>1970-80</option>
+    <option value=1980>1980-90</option>
+    <option value=1990>1990-00</option>
+    <option value=2000>2000-10</option>
+    <option value=2010>2010-20</option>
+    <option value=2020>2020-23</option>
+  </select>
+</span>
+
+<center>
+  <div class="horizontal-row" id="movies_container">
+
+  </div>
+
+</center>
+
+<!-- ------------ ---------- modal for particular movies------ ------------ ----------- -->
+<div class="modal fade" id="moviemodal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+    <div class="modal-content" style="background-color: rgb(38, 38, 40); border-radius: 10px;">
+
+      <div class="modal-body" style="padding: 5%; padding-top: 0; color: white; position: relative;">
+        <h2 id="movie_title" style="margin-right: 20px; font-weight: bolder;"></h2>
+        <button type="button" class="close" onclick="press_back()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="row justify-content-center g-4">
+          <div class="col col-lg-12 col-m-12 col-sm-12 col-12 order-md-1 order-3 position-relative" id="movieytplayer"></div>
+          <span class="col col-lg-4 col-md-6 col-sm-8 col-8 order-md-2 order-1" style="position: relative;"> <img src="" alt="" id="modal_movie_poster" width="100%"> <div class="circle"><p id="movie_rating" style="font-weight:bolder; font-size: large;"></p></div></span>
+          <div class="col col-lg-8 col-md-6 col-sm-12 col-12 order-md-3 order-2">
+            <div id="movie_overview"></div><br>
+            <div id="modal_movie_info" style="border: 1px solid white; border-radius: 5px;"></div><br>
+            <div class="row">
+              <div class="col col-lg-6 col-md-6 col-sm-6 col-6" id="castlist1"></div>
+            <div class="col col-lg-6 col-md-6 col-sm-6 col-6" id="castlist2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ---- ----------- -Nav modal for movies page --- --- --- --------------------------- -->
+<div class="modal fade" id="movies_page" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-scrollable modal-fullscreen">
+    <div class="modal-content" style="background-color: rgb(14, 14, 14); border-radius: 10px; color: white;">
+      <div class="modal-body">
+        <center>
+          <h5>Comedy Movies</h5>
+
+          <select class="selectfilter" id="movies_page_languagefilter"
+            onchange="filter_data_movies('movies_page', true)">
+            <option value=1 selected>Language</option>
+            <option value="hi">Hindi</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="ko">Korean</option>
+            <option value="fi">Finnish</option>
+            <option value="de">German</option>
+          </select>
+
+          <select class="selectfilter" id="movies_page_yearfilter" onchange="filter_data_movies('movies_page', true)">
+            <option value=1 selected>Year - All</option>
+            <option value=1960>1960-70</option>
+            <option value=1970>1970-80</option>
+            <option value=1980>1980-90</option>
+            <option value=1990>1990-00</option>
+            <option value=2000>2000-10</option>
+            <option value=2010>2010-20</option>
+            <option value=2020>2020-23</option>
+          </select>
+
+          <select class="selectfilter" id="movies_page_ratingfilter" onchange="filter_data_movies('movies_page', true)">
+            <option value=1 selected>Rating</option>
+            <option value=8>>8</option>
+            <option value=7>>7</option>
+            <option value=6>>6</option>
+            <option value=5>>5</option>
+          </select>
+
+          <button class="selectfilter" onclick="moviespageno--; movies_page();" style="height: 1.6em;">&#10094;</button>
+          <button class="selectfilter" onclick="moviespageno++; movies_page();" style="height: 1.6em;">&#10095;</button>
+
+          <div id="movies_page_list"></div>
+        </center>
+        <button type="button" class="close" onclick="press_back()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var imovies = 0;
+  function movies_cards() {
+    var i = imovies;
+    if (imovies == 0) {
+      document.getElementById("movies_container").innerHTML = `
+        <span class="prev" onclick="move('left', 'movies_container')" style=" margin-top: 7%; left: 1%;">&#10094;</span>
+        <span class="next" onclick="move('notleft', 'movies_container')" style="margin-top: 5%; right:1%;">&#10095;</span>`;
+      imovies = 10;
+    } else imovies += 20;
+
+    for (; i < imovies && i < rows.length; i++) {
+      document.getElementById('movies_container').innerHTML += `
+        <div class="mycard" style="--bg-img: url('https://image.tmdb.org/t/p/original`+ moviesdata[rows[i]]['poster_path'] + `'); background-size: 100%; height: 10.5em;" loading="lazy" 
+          onclick="changehash('#movies/`+ rows[i] + `/` + changespacetodash(moviesdata[rows[i]]['title']) + `');">
+        </div>`;
+    }
+
+  }
+
+  function movies_modal(rowno) {
+    if(moviesdata[0]['id'] == null) {fetch_all_data('movies'); return;}
+    document.getElementById('movie_title').textContent = moviesdata[rowno]['title'];
+    document.getElementById('modal_movie_poster').src = "https://image.tmdb.org/t/p/original" + moviesdata[rowno]['poster_path'];
+    document.getElementById('movie_rating').textContent = moviesdata[rowno]['vote_average']
+    var castlistid = 'castlist1';
+    let castarray = moviesdata[rowno]['cast'].split(",");
+    for (i = 0; i < 2; i++) {
+      document.getElementById(castlistid).innerHTML = '';
+      for (j = 0; j < 5; j++) {
+        document.getElementById(castlistid).innerHTML += (castarray[i * 5 + j] + '<br>');
+      }
+      castlistid = 'castlist2';
+    }
+    document.getElementById('modal_movie_info').innerHTML = `<p>
+        <img src="assets/icons/title-25.png" wdith="25px" height="25px"> ` + moviesdata[rowno]['original_title']
+      + '<br><img src="assets/icons/calendar-25.png" wdith="25px" height="25px">  ' + moviesdata[rowno]['release_date']
+      + `<br><img src="assets/icons/popularity-25.png" wdith="25px" height="25px">  ` + moviesdata[rowno]['popularity']
+      + `<br><img src="assets/icons/language-25.png" wdith="25px" height="25px"> ` + langexpander.get(moviesdata[rowno]['original_language'])
+      + `<br><img src="assets/icons/genre-25.png" wdith="25px" height="25px"> ` + moviesdata[rowno]['genres'].split(" ").map(id => genre_expander[id]).join(", ") + ` </p>`;
+    document.getElementById('movieytplayer').innerHTML = `<img class="img-fluid" src="https://i3.wp.com/i.ytimg.com/vi/` + moviesdata[rowno]['trailor'] + `/maxresdefault.jpg" alt=""  width="100%" style="border-radius: 5px;">
+      <img class="img-fluid position-absolute top-50 start-50 translate-middle" src="/assets/icons/play-96.png" alt="" width="9%"  onclick=""></img></img>`;
+    document.getElementById('movie_overview').textContent = moviesdata[rowno]['overview'];
+  }
+
+  function imgtoyt_movies(rowno) {
+    document.getElementById('movieytplayer').innerHTML = `
+        <iframe class="ratio ratio-16x9 comicytvideos" type="text/html" width
+          allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay;"
+          style="padding-left: 0em; padding-right: 0em; border-radius: 20px; width: 100%; aspect-ratio: 16 / 9; "
+          src="https://www.youtube.com/embed/`+ moviesdata[rowno]['trailor'] + `" frameborder="0" allowfullscreen>
+        </iframe>`;
+  }
+
+  var langexpander = new Map([
+    ['en', 'English'],
+    ['fr', 'French'],
+    ['hi', 'Hindi'],
+    ['ko', 'Korean'],
+    ['fi', 'Finnish'],
+    ['de', 'German'],
+    ['es', 'spanish']
+  ]);
+
+  const genre_expander = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  99: "Documentary",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Music",
+  9648: "Mystery",
+  10749: "Romance",
+  878: "Science Fiction",
+  10770: "TV Movie",
+  53: "Thriller",
+  10752: "War",
+  37: "Western"
+};
+
+  function filter_data_movies(fnname, ispage = false) {
+    var j = 0, length;
+    rows = Array.from(Array(moviesdata.length - 1).keys());
+    if (ispage) {
+      moviespageno = 0;
+      j = 0;
+      var ratingid = '#' + fnname + '_ratingfilter'
+      if ($(ratingid).val() != 1 && $(ratingid).val() != undefined) {
+        var rating = parseFloat($(ratingid + " :selected").val());
+        length = rows.length;
+        for (var i = 0; i < length; i++) {
+          if (parseFloat(moviesdata[rows[i - j]]['vote_average']) < rating || parseFloat(moviesdata[rows[i - j]]['vote_average']) >= rating + 1) { rows.splice(i - j, 1); j++ }
+        }
+      }
+    }
+    else {
+      $('#movies_container').scrollLeft(0);
+      imovies = 0;
+    }
+    j = 0;
+    var languageid = '#' + fnname + '_languagefilter'
+    if ($(languageid).val() != 1 && $(languageid).val() != undefined) {
+      var language = $(languageid + " :selected").val();
+      length = rows.length;
+      for (var i = 0; i < length; i++) {
+        if (moviesdata[rows[i - j]]['original_language'] !== language) {rows.splice(i - j, 1); j++ }
+      }
+    }
+
+    j = 0;
+    var yearid = '#' + fnname + '_yearfilter'
+    if ($(yearid).val() != 1 && $(yearid).val() != undefined) {
+      var year = parseInt($(yearid + " :selected").val());
+      length = rows.length;
+      for (var i = 0; i < length; i++) {
+        if (parseInt(moviesdata[rows[i - j]]['release_date'].substr(0, 4)) < year || (parseInt(moviesdata[rows[i - j]]['release_date'].substr(0, 4))) > (year + 10)) { rows.splice(i - j, 1); j++ }
+      }
+    }
+    eval(fnname)();
+  }
+
+  var moviespageno = 0;
+  function movies_page() {
+    moviespageno < 0 ? moviespageno = 0 : moviespageno > (rows.length / 40 + 1) ? moviespageno = (rows.length / 40 + 1) : null;
+    document.getElementById('movies_page_list').innerHTML = ''
+    for (var i = 40 * moviespageno; i < 40 * (moviespageno + 1) && i < rows.length; i++) {
+      document.getElementById('movies_page_list').innerHTML += `
+        <div class="mycard" style="--bg-img: url('https://image.tmdb.org/t/p/original`+ moviesdata[rows[i]]['poster_path'] + `'); background-size: 100%; height: 10.5em;" loading="lazy" 
+          onclick="changehash('#movies/`+ rows[i] + `/` + changespacetodash(moviesdata[rows[i]]['title']) + `');">
+        </div>`;
+    }
+  }
+</script>
